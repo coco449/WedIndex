@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>聒聒</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans+TC&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+
+    <script>
+        $(document).ready(function () {
+            init();
+        });
+
+        function init() {
+            $('#righttoleft').click(LeftToRight_Translate);
+        }
+
+        function LeftToRight_Translate() {
+            $.ajax({
+                type: "post", //http verb
+                headers: {
+                    //http header
+                    "Authorization": "EndpointKey 3f380b88-a336-46a8-8fed-d35412b81cb4",
+                    "Content-Type": "application/json"
+                },
+                url: "https://bot1016.azurewebsites.net/qnamaker/knowledgebases/b85f2630-1e35-4c2d-aa04-b9ac71d1829c/generateAnswer",
+                 
+                 //要傳遞的訊息
+                dataType: "json",
+                data: JSON.stringify({
+                    "question": $('#lefttextarea').val()}),
+                success: function (response) {
+                    $('#righttextarea').val(response.answers[0].answer);
+                    //呼叫遠端服務後的回傳結果
+                }
+            });
+        }
+
+
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row mt-5">
+            <div class="col-5">
+                <div class="card bg-dark text-white">
+                    <div class="card-header">
+                    </div>
+                    <div class="card-body">
+                        <textarea id="lefttextarea" class="form-control" placeholder="翻譯" aria-label="With textarea"
+                            rows="10"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-1 text-center m-auto">
+                <button id="righttoleft" type="button" class="btn btn-outline-dark"><i
+                        class="fas fa-long-arrow-alt-left"></i></button>
+            </div>
+            <div class="col-5">
+                <div class="card  bg-dark text-white">
+                    <div class="card-header">
+
+                    </div>
+                    <div class="card-body">
+                        <textarea id="righttextarea" class="form-control" placeholder="翻譯" aria-label="With textarea"
+                            rows="10"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

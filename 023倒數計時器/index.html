@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>倒數計時</title>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+
+    <script>
+        function ButtonStart() {
+            ispause = false;
+
+            if ($("#ButtonStart").val() == "開始") {
+                if ($("#s").val() > 0) {
+                    document.getElementById('Label1').innerText = $("#s").val();
+                    $("#ButtonStart").val("暫停")
+                    ShowClock();
+                }
+                else {
+                    ErrorNum()
+                }
+            }
+            else if ($("#ButtonStart").val() == "暫停") {
+                ispause = true;
+                $("#ButtonStart").val("開始")
+            }
+            else if ($("#ButtonStart").val() == "嗆我嗆夠沒இдஇ") {
+                location.reload();
+            }
+        }
+        function ShowClock() {
+            if (ispause == false) {
+                document.getElementById('Label1').innerText = document.getElementById('Label1').innerText - 1;
+                TimeUp();
+                setTimeout(ShowClock, 1000);
+            }
+        }
+        function TimeUp() {
+            if (document.getElementById('Label1').innerText <= 0) {
+                ispause = true;
+                var audio = new Audio("沒有妹妹.mp3");
+                audio.play();
+                $("#ButtonStart").val("嗆我嗆夠沒இдஇ");
+            }
+        }
+        function ErrorNum() {
+            alert("請確認輸入是否是為0以上的數字")
+        }
+
+
+
+
+        $(document).ready(function () {
+            $("#ButtonStart").click(ButtonStart);
+        });
+
+
+    </script>
+
+    <style>
+        @font-face {
+            font-family: Digital;
+            src: url('digital-7 (italic).ttf')
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="row">
+        <div class="col-6 mx-auto">
+            <div class="row">
+                <input type="text" class="col-12 mx-auto" id="s" style="font-family:Digital">
+                <label id="Label1" class="col- mx-auto" style="font-family:Digital;font-size: 50px">test</label><br>
+                <input type="button" class="col-12 mx-auto" id="ButtonStart" value="開始">
+            </div>
+        </div>
+    </div>
+
+
+</body>
+
+
+
+</html>

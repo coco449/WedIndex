@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- jQuery v1.9.1 -->
+    <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <!-- jQuery Validation v1.17.0 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/additional-methods.min.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+
+</body>
+
+</html>
+
+<form id="form1">
+    <label for="name">Name*</label>
+    <input type="text" id="name" name="name" required />
+    <!-- 
+            屬性設定[註1]
+            required: 必要項目
+        -->
+    <hr />
+    <input class="submit" type="submit" value="Submit">
+</form>
+<style>
+    .error {
+        /* 當格式錯誤時，則新增此類別 */
+        border-color: red !important
+    }
+</style>
+<script>
+    $("#form1").validate({
+        // 參數設定[註2]
+        errorPlacement: function (error, element) {
+            return true;
+        }
+    });
+</script>

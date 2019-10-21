@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!-- jQuery v1.9.1 -->
+    <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <!-- jQuery Validation v1.17.0 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/additional-methods.min.js"></script>
+
+    <title>註冊</title>
+
+    <script>
+        //getElementById(抓取頁面上的元素)
+        function getElement(name) {
+            return document.getElementById(name);
+        }
+
+        //判斷是否可以送件
+        function Button_Submit() {
+            //抓取頁面上的checkboc1，取得是否checked
+            var isChecked = getElement('MustCheck').checked;
+            //如果是，就return true
+            if (isChecked) { return true; }
+            //否則就... 
+            else {
+                alert('必須勾選同意!');
+                return false;
+            }
+
+        }
+
+        //當網頁載入完成後執行
+        window.onload = function () {
+            //hook event(在form1被submit時...)
+            getElement('form1').onsubmit = function () {
+                //呼叫 Button_Submit()
+                return Button_Submit();
+            };
+        };
+    </script>
+</head>
+
+<body>
+    <form id="form1"
+        action="http://isbaas.azurewebsites.net/WebForms/Form2Mail.aspx?mailto=harry0961105819@gmail.com&redirect=http://www.google.com"
+        method="post">
+        <div class="row" style="margin: 10px">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <div class="card">
+                    <fieldset>
+                        <legend class="btn btn-primary">註冊帳號</legend>
+                        <div style="margin: 10px">
+                            <label>使用者名稱*:</label><br>
+                            <input type="text" class="form-control" placeholder="請輸入名稱" value="" id="username"
+                                name="username" required /><br>
+                            <label>帳號*:</label><br>
+                            <input type="text" class="form-control" placeholder="請輸入帳號" value="" id="fieldname"
+                                name="fieldname" required /><br>
+                            <label>密碼*:</label><br>
+                            <input type="password" placeholder="請輸入密碼" class="form-control" value="" id="fieldpaw"
+                                name="fieldpaw" required /><br>
+                            <label>e-mail*:</label><br>
+                            <input type="email" class="form-control" placeholder="請輸入e-mail" value="" id="e-mail"
+                                name="e-mail" required /><br>
+                            <input type="checkbox" style="margin:10px auto" id="MustCheck" name="MustCheck">我同意使用條款<br>
+                            <button type="submit" class="btn btn-primary">註冊</button>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="col-md-3"></div>
+        </div>
+    </form>
+    <style>
+        .error {
+            /* 當格式錯誤時，則新增此類別 */
+            border-color: red !important
+        }
+    </style>
+    <script>
+        $("#form1").validate({
+            // 參數設定[註2]
+            errorPlacement: function (error, element) {
+                return true;
+            }
+        });
+    </script>
+</body>
+
+</html>

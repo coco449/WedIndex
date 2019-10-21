@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>BMI計算物件版</title>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+        function Show(msg) {
+            $('#lab1').html($('#lab1').html() + msg + "<br/>")
+        }
+
+
+        var BMIobj = {
+            Height: 0,
+            Weight: 0,
+            GetBMI: function () {
+                let BMI = 0;
+                H = this.Height / 100;
+                BMI = this.Weight / (H * H);
+                return BMI;
+            }
+        }
+
+        $(function () {
+            $('#Button1').click(function() {
+                BMIobj.Height = $('#textHeight').val();
+                BMIobj.Weight = $('#textWeight').val();
+                let BMI = BMIobj.GetBMI();
+                Show("BMI:" + BMI);
+            });
+        })
+    </script>
+
+</head>
+
+<body>
+    <div class="row" style="margin:10px">
+        <div class="col-6">
+            <h1>BMI計算(改成物件版本)</h1>
+            <label>身高:</label>
+            <input class="form-control" id="textHeight" value="0" />
+            <label>體重:</label>
+            <input class="form-control" id="textWeight" value="0" />
+            <br />
+            <button class="btn btn-primary" id="Button1">計算</button>
+            <br />
+            <label id="lab1"></label>
+        </div>
+    </div>
+
+</body>
+
+</html>

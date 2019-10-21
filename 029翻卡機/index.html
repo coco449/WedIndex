@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Slot</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- bootstrap 4.3.1 -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <style>
+        img {
+            border: 10px solid transparent !important;
+            height: 170px;
+            width: 120px;
+            border-radius: 10%;
+        }
+
+        span {
+            text-align: center;
+            font-size: 60px;
+            font-family: Microsoft JhengHei;
+            color: black;
+        }
+
+        .imgs {
+            border-radius: 10%;
+            border: 10px solid orange !important;
+            box-sizing: border-box;
+            box-shadow: orange;
+        }
+
+        .clear {
+            border-radius: 10%;
+            transition: all 1.5s;
+        }
+    </style>
+
+    <script>
+        var PlayCards = ['水餃', '牛肉麵', '肉羹麵', '拉麵', '炒飯', '涼麵','陽春麵'];
+        var Cards = []; //所有牌
+        var Card;
+        var index = 0;  //當前選擇的那個牌(在陣列中的index)
+        var times = 0; //剩餘幾步
+
+        function SetupRandomCards() {
+            //亂數放置卡牌
+            for (let i = 0; i < Cards.length; i++) {
+                let url = PlayCards[Math.floor(Math.random() * PlayCards.length)];
+                //設定圖片位置
+                Cards[i].src = 'picture/' + url+".png";
+                //將圖片名稱設定為 data 屬性
+                Cards[i].data = url;
+            }
+        }
+        function ButtonStart() {
+            //把所有卡牌設為背面
+            $("#result").html("...");
+            $('img').prop('src', 'picture/back1.png');
+            times = Math.floor(Math.random() * 20) + 50;
+            Cards[index].className = "imgs";
+            start();
+        }
+
+        function start() {
+            Cards[index].className = "clear";
+            //將當前index狀態設為一般(未選取)
+            //先清除狀態
+            times--;
+            if (index < 15) {
+                index++;
+            } //跑下一張
+            else {
+                index = 0;
+            } //如果超過陣列範圍，則歸零
+            Cards[index].className = "imgs";
+            //將下一張設為選取樣式
+            if (times == 10) {
+                //倒數幾次的時候翻牌
+                SetupRandomCards();
+                //100毫秒後清空
+                setTimeout(start, 100);
+            }
+            else if (times > 0) {
+                //100毫秒後清空
+                setTimeout(start, 50);
+            }
+            else {
+                $("#result").html(`${Cards[index].data}`)
+            }
+        }
+        //init
+        $(document).ready(function () {
+            //先hook事件
+            $('#ButtonStart').click(ButtonStart);
+            //把頁面上所有Cards放入陣列
+            for (var i = 0; i <= 16; i++) {
+                Card = document.getElementById("i" + i);
+                if (Card) {
+                    Cards.push(Card);
+                }
+            }
+            console.log(Cards);
+            index = Math.floor(Math.random() * Cards.length);
+            //Math.random() 取 0~1之間的亂數
+            //Math.floor() 取最大整數
+            //決定從哪個地方開始跑
+
+        });
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row mt-5 text-center">
+            <div class="col-2">
+                <img src='picture/back1.png' id="i1" alt='' />
+            </div>
+            <div class="col-2">
+                <img src='picture/back1.png' id="i2" alt='' />
+            </div>
+            <div class="col-2">
+                <img src='picture/back1.png' id="i3" alt='' />
+            </div>
+            <div class="col-2">
+                <img src='picture/back1.png' id="i4" alt='' />
+            </div>
+            <div class="col-2">
+                <img src='picture/back1.png' id="i5" alt='' />
+            </div>
+            <div class="col-2">
+                <img src='picture/back1.png' id="i6" alt='' />
+            </div>
+        </div>
+        <div class="row mt-5 text-center">
+            <div class="col-2">
+                <img src='picture/back1.png' id="i16" alt='' />
+            </div>
+            <div class="col-8">
+                <span>今天吃什麼</span><br />
+                <span id="result">...</span>
+            </div>
+            <div class="col-2">
+                <img src='picture/back1.png' id="i7" alt='' />
+            </div>
+        </div>
+        <div class="row mt-5 text-center">
+            <div class="col-2">
+                <img src='picture/back1.png' id="i15" alt='' />
+            </div>
+            <div class="col-2">
+            </div>
+            <div class="col-2">
+            </div>
+            <div class="col-2">
+
+            </div>
+            <div class="col-2">
+
+            </div>
+            <div class="col-2">
+                <img src='picture/back1.png' id="i8" alt='' />
+            </div>
+        </div>
+        <div class="row mt-5 text-center">
+            <div class="col-2">
+                <img src='picture/back1.png' id="i14" alt='' />
+            </div>
+            <div class="col-2">
+                <img src='picture/back1.png' id="i13" alt='' />
+            </div>
+            <div class="col-2">
+                <img src='picture/back1.png' id="i12" alt='' />
+            </div>
+            <div class="col-2">
+                <img src='picture/back1.png' id="i11" alt='' />
+            </div>
+            <div class="col-2">
+                <img src='picture/back1.png' id="i10" alt='' />
+            </div>
+            <div class="col-2">
+                <img src='picture/back1.png' id="i9" alt='' />
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col">
+                <button type="button" name="" id="ButtonStart" class="btn btn-info btn-lg btn-block">
+                    開始
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+
+</html>

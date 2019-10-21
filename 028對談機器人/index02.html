@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>機器人二世</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans+TC&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+
+    <script>
+        function ButtonSend() {
+            var html = $('#TalkContainer').html();
+            var UserSay = $('#inputText').val();
+            //clean
+            $('#inputText').val('');
+            //show user Says...
+            $('#TalkContainer').html(html + '<br /><br />用戶 : ' + UserSay);
+            //scroll to bottom
+            $('#TalkContainer').scrollTop($('#TalkContainer')[0].scrollHeight);
+            //取得答案...
+            GetAnswer(UserSay, function (ret) {
+                //如果ok
+                //show user Says...
+                if (ret.answers[0].answer == "No good match found in KB.") {
+                    let html = $('#TalkContainer').html();
+                    $('#TalkContainer').html(html + '<br /><br />客服 : ' + '沒有符合的收尋');
+                    //scroll to bottom
+                    $('#TalkContainer').scrollTop($('#TalkContainer')[0].scrollHeight);
+                }
+                else {
+                    let html = $('#TalkContainer').html();
+                    $('#TalkContainer').html(html + '<br /><br />客服 : ' + ret.answers[0].answer);
+                    //scroll to bottom
+                    $('#TalkContainer').scrollTop($('#TalkContainer')[0].scrollHeight);
+                }
+
+            }, function (ret) { alert("錯誤") });
+        }
+
+        //取得答案，並執行whenSuccess
+        //whenSuccess:傳入function作為參數
+        function GetAnswer(msg, whenSuccess, error) {
+            $.ajax({
+                type: "post",
+                headers: {
+                    "Authorization": "EndpointKey 3f380b88-a336-46a8-8fed-d35412b81cb4",
+                    "Content-Type": "application/json"
+                },
+                url: "https://bot1016.azurewebsites.net/qnamaker/knowledgebases/b85f2630-1e35-4c2d-aa04-b9ac71d1829c/generateAnswer",
+                data: JSON.stringify({ "question": msg }),
+                dataType: "json",
+                success: whenSuccess,
+                error: error
+                //如果有錯
+
+            });
+        }
+
+        //doc ready
+        $(document).ready(function () {
+            $('#ButtonSend').click(ButtonSend);
+            $('#inputText').keypress(function (e) {
+                if (e.keyCode == 13) {
+                    ButtonSend();
+                    return false;
+                }
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <div class="row" style="margin: 10px">
+        <div class="col-2"></div>
+        <div class="col-8">
+            <!-- 卡片  -->
+            <div class="card">
+                <!-- 卡片標題 -->
+                <span class="card-header bg-primary" style="color:white">
+                    對談機器人
+                </span>
+                <!-- 卡片內容 -->
+                <div class="card-body" style=" height:400px;  background-image: url('./img/4.jpg')">
+                    <!-- 對談區 -->
+                    <div id="TalkContainer" style="overflow:auto;height:368px">
+                    </div>
+                </div>
+            </div>
+            <form class="form-inline">
+                <input id="inputText" class="form-control" style="width:88%" value="" />
+                <button type="button" id="ButtonSend" class="btn btn-primary">送出</button>
+            </form>
+        </div>
+        <div class="col-2"></div>
+</body>
+
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script>
+        var turn = 0;
+
+
+        function playRound(objDest) {
+            if (objDest.innerText == "*" && turn == 0) {
+                objDest.innerText = "O";
+                turn = 1;
+            }
+            else if (objDest.innerText == "*" && turn == 1) {
+                objDest.innerText = "X";
+                turn = 0;
+            }
+            else {
+                confirm("方塊已經被佔用了!");
+            }
+
+            if (checkRow()) {
+                if (turn == 0) {
+                    if (confirm("玩家2贏了!\n\n要再玩一場嗎?"))
+                        clearTable();
+                }
+                else if (turn == 1) {
+                    if (confirm("玩家1贏了!\n\n要再玩一場嗎?"))
+                        clearTable();
+                }
+            }
+            else if (tableIsFull()) {
+                if (confirm("平手\n\n要再玩一場嗎?"))
+                    clearTable();
+            }
+        }
+
+
+
+        function clearTable() {
+            for (i = 0; i <= 2; i++) {
+                eval("ttt" + i + "0" + ".innerHTML = '*';")
+                eval("ttt" + i + "1" + ".innerHTML = '*';")
+                eval("ttt" + i + "2" + ".innerHTML = '*';")
+            }
+
+        }
+
+
+        function checkRow() {
+
+            for (i = 0; i <= 2; i++) {
+
+                // 列
+                if (eval("compare(" + "ttt" + i + "0" + "," + "ttt" + i + "1" + "," + "ttt" + i + "2" + ")"))
+                    return true;
+
+
+                // 對角線
+                if (eval("compare(" + "ttt" + "0" + i + "," + "ttt" + "1" + "1" + "," + "ttt" + "2" + (2 - i) + ")"))
+                    return true;
+
+                // 欄
+                if (eval("compare(" + "ttt" + "0" + i + "," + "ttt" + "1" + i + "," + "ttt" + "2" + i + ")"))
+                    return true;
+
+            }
+            return false;
+        }
+
+        function tableIsFull() {
+            for (i = 0; i <= 2; i++)
+                for (j = 0; j <= 2; j++)
+                    if (eval("ttt" + i + j).innerText == "*")
+                        return false;
+
+            return true;
+        }
+
+        function compare(obj0, obj1, obj2) {
+            if (obj0.innerText != "*" && obj1.innerText != "*" && obj2.innerText != "*")
+            if (obj0.innerText == obj1.innerText && obj1.innerText == obj2.innerText)
+                return true;
+
+            return false;
+        }
+
+    </script>
+
+</head>
+
+<body>
+    <table border=1 style="border-collapse:collapse;width:150px;height:150px" bordercolor="#000000">
+
+        <tr>
+            <td width=50 align="center" id="ttt00" onClick="playRound(this);">*</td>
+            <td width=50 align="center" id="ttt01" onClick="playRound(this);">*</td>
+            <td width=50 align="center" id="ttt02" onClick="playRound(this);">*</td>
+        </tr>
+
+        <tr>
+            <td width=50 align="center" id="ttt10" onClick="playRound(this);">*</td>
+            <td width=50 align="center" id="ttt11" onClick="playRound(this);">*</td>
+            <td width=50 align="center" id="ttt12" onClick="playRound(this);">*</td>
+        </tr>
+
+        <tr>
+            <td width=50 align="center" id="ttt20" onClick="playRound(this);">*</td>
+            <td width=50 align="center" id="ttt21" onClick="playRound(this);">*</td>
+            <td width=50 align="center" id="ttt22" onClick="playRound(this);">*</td>
+        </tr>
+
+    </table>
+</body>
+
+</html>

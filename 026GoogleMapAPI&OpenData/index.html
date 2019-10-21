@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Simple Map</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+        /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+        #map {
+            height: 100%;
+        }
+
+        /* Optional: Makes the sample page fill the window. */
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+    <div id="map"></div>
+    <script>
+        var map;
+
+        function initMap() {
+            var myLatLng = { lat: 25.0417776, lng: 121.5382053 };
+
+
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: 25.0417776, lng: 121.5382053 },
+                zoom: 15
+            });
+
+
+            var marker = new google.maps.Marker({
+                position: myLatLng,
+                map: map,
+                title: 'Hello World!'
+            });
+            var icons = {
+                ubike: {
+                    icon: "bike.png"
+                },
+                ubikeblue: {
+                    icon: "bike_blue.png"
+                },
+            };
+            var features = GetUbikeLocation();
+
+            // Create markers.
+            for (var i = 0; i < features.length; i++) {
+                var marker = new google.maps.Marker({
+                    position: features[i].position,
+                    icon: icons[features[i].type].icon,
+                    map: map,
+                    title:features[i].title
+                });
+            };
+        }
+        //取得Ubike位址(經緯度)
+        function GetUbikeLocation() {
+            /*[
+                {
+                    position: new google.maps.LatLng(25.0417776, 121.5382053),
+                    type: 'ubike'
+                }
+            ]*/
+            var data = [];
+            //呼叫OpenData
+            var Opendata = GetOpenData();
+            console.log("Opendata is", Opendata)
+            $.each(Opendata.retVal, function (i, item) {
+                console.log('i is', i);
+                console.log('item is', item);
+                var singleItem = {
+                    position: new google.maps.LatLng(item.lat, item.lng),
+                    type: 'ubike',
+                    title:item.sbi+'/'+item.tot,
+                };
+                
+                if(item.sbi<10){
+                    singleItem.type='ubikeblue'
+                }
+                data.push(singleItem);
+            });
+            return data;
+        }
+
+        function GetOpenData() {
+            var ubikelocation;
+
+            $.ajax({
+                type: "Get",
+                url: "https://tcgbusfs.blob.core.windows.net/blobyoubike/YouBikeTP.json",
+                success: function (data) {
+                    ubikelocation = data;
+                    console.log("data is", data);
+                },
+                error: function () {
+                    alert("fail");
+                },
+                async: false,
+            });
+
+            return ubikelocation;
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlKWP4uWjQIR3WDAWLAu6rUhBfc3_ppag&callback=initMap"
+        async defer></script>
+</body>
+
+</html>

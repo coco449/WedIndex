@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-TW">
+
+<head>
+    <title>BMI</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" />
+
+    <script>
+        function Show(msg) {
+            document.getElementById('Label1').innerHTML += msg + "<br />";
+        }
+        function Button1_Click() {
+            let height = document.getElementById('txbHeight').value;
+            let weight = document.getElementById('txbWeight').value;
+            let bmi = GetBmi(height, weight);
+            Show("BMI :" + bmi);
+        }
+        function GetBmi(height, weight) {
+            let bmi = 0;
+            H = height / 100;
+            bmi = weight / (H * H);
+            return bmi;
+        }
+    </script>
+</head>
+
+<body>
+    <div class="row" style="margin: 10px">
+        <div class="col-md-6">
+            <div class="card">
+                <label>身高:</label>
+                <input id="txbHeight" type="text" placeholder="輸入身高" /><br />
+                <label>體重:</label>
+                <input id="txbWeight" type="text" placeholder="輸入體重" /><br />
+            </div>
+            <div>
+                <label id="Label1">結果:</label><br>
+                <input type="button" id="Button1"class="btn btn-primary" onclick="Button1_Click();" value="計算" />
+            </div>
+        </div>
+        <div class="col-md-6">
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>BMI計算(改成jQuery版本)</title>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <script>
+        $(function () {
+            $('#Button1').click(function (e) {
+                var textHeight = $('#textHeight').val();
+                var textWeight = $('#textWeight').val();
+                textHeight = textHeight / 100;
+                var BMI = textWeight / (textHeight * textHeight);
+                $('#result').html(BMI);
+            });
+
+            $("#CheckAll").click(function () {
+                if ($("#CheckAll").prop("checked")) {//如果全選按鈕有被選擇的話（被選擇是true）
+                    $("input[name='Checkbox[]']").each(function () {
+                        $(this).prop("checked", true);//把所有的核取方框的property都變成勾選
+                    })
+                } else {
+                    $("input[name='Checkbox[]']").each(function () {
+                        $(this).prop("checked", false);//把所有的核方框的property都取消勾選
+                    })
+                }
+            })
+
+            $("#sel01").change(sel01_chage);
+
+            $('img').hover(function () {
+                $(this).css("cursor", "pointer");
+                $(this).css("transform", "scale(1.1)").css("transition-duration(2s)");
+            }, function () {
+                $(this).css("transform", "scale(1)").css("transition-duration(2s)");
+            }
+            );
+        }
+        );
+        function sel01_chage() {
+            var val = $(this).val();
+            $('#ImgGroup2 img').removeClass();
+            $('#ImgGroup2 img').addClass(val);
+        }
+
+    </script>
+    <style>
+        .br15 {
+            border-radius: 15px;
+        }
+
+        .br30 {
+            border-radius: 30px;
+        }
+
+        .br50 {
+            border-radius: 50px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="row" style="margin:10px">
+        <div class="col-6">
+            <h1>BMI計算(改成jQuery版本)</h1>
+            <label>身高:</label>
+            <input class="form-control" id="textHeight" value="0" />
+            <label>體重:</label>
+            <input class="form-control" id="textWeight" value="0" />
+            <br />
+            <button class="btn btn-primary" id="Button1">計算</button>
+            <br />
+            <span id="result">BMI:</span>
+        </div>
+    </div>
+    <div class="row" style="margin:10px">
+        <div class="col-12">
+            <input id="CheckAll" type="checkbox" />勾選全部
+            <div id="CheckBoxGroup">
+                <input type="checkbox" name="Checkbox[]" />項目1
+                <input type="checkbox" name="Checkbox[]" />項目2
+                <input type="checkbox" name="Checkbox[]" />項目3
+                <input type="checkbox" name="Checkbox[]" />項目4
+                <input type="checkbox" name="Checkbox[]" />項目5
+                <input type="checkbox" name="Checkbox[]" />項目6
+                <input type="checkbox" name="Checkbox[]" />項目7
+                <input type="checkbox" name="Checkbox[]" />項目8
+            </div>
+        </div>
+    </div>
+
+
+    <div id="ImgGroup2" class="row" style="margin:10px; padding-top:100px">
+        <div class="col-12">
+            <select id="sel01">
+                <option value="br15">15px</option>
+                <option value="br30">30px</option>
+                <option value="br50">50px</option>
+            </select>
+        </div>
+        <div class="row" style="margin:10px">
+            <div class="col-4">
+                <img src="img/4.jpg" style="width:100%" class="img-responsive " />
+            </div>
+            <div class="col-4">
+                <img src="img/5.jpg" style="width:100%" class="img-responsive " />
+            </div>
+            <div class="col-4">
+                <img src="img/6.jpg" style="width:100%" class="img-responsive " />
+            </div>
+        </div>
+        <div class="row" style="margin:10px">
+            <div class="col-4">
+                <img src="img/1.jpg" style="width:100%" class="img-responsive " />
+            </div>
+            <div class="col-4">
+                <img src="img/2.jpg" style="width:100%" class="img-responsive " />
+            </div>
+            <div class="col-4">
+                <img src="img/3.jpg" style="width:100%" class="img-responsive " />
+            </div>
+        </div>
+        
+    </div>
+
+</body>
+
+</html>

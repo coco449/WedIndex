@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <input type="text" id="text1"><br>
+    <input type="button" onclick="goeval()" value="執行"> 
+    <label id="Label1">--</label>
+</body>
+
+<script>
+function goeval()
+{
+    var text=document.getElementById('text1');
+    var ret = text.value;
+    document.getElementById('Label1').innerText=eval(ret);
+}
+</script>
+</html>

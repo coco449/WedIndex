@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        td {
+            font-size: 50px;
+            text-align: center;
+        }
+    </style>
+
+
+</head>
+<script>
+    var turn = 0;
+
+    function SetPoint(obj) {
+
+        if (turn == 0) {
+            objDest.innerText = "O";
+            turn = 1;
+        }
+        else {
+            objDest.innerText = "X";
+            turn = 0;
+        }
+
+
+    }
+</script>
+
+<body>
+    <h4>OOXX遊戲</h4>
+    <table border="1" id='table1'>
+        <caption>
+        </caption>
+        <tr>
+            <td style="cursor: pointer;" width="100" height="100" onclick="SetPoint(this)">_</td>
+            <td style="cursor: pointer;" width="100" height="100" onclick="SetPoint(this)">_</td>
+            <td style="cursor: pointer;" width="100" height="100" onclick="SetPoint(this)">_</td>
+        </tr>
+        <tr>
+            <td style="cursor: pointer;" width="100" height="100" onclick="SetPoint(this)">_</td>
+            <td style="cursor: pointer;" width="100" height="100" onclick="SetPoint(this)">_</td>
+            <td style="cursor: pointer;" width="100" height="100" onclick="SetPoint(this)">_</td>
+        </tr>
+        <tr>
+            <td style="cursor: pointer;" width="100" height="100" onclick="SetPoint(this)">_</td>
+            <td style="cursor: pointer;" width="100" height="100" onclick="SetPoint(this)">_</td>
+            <td style="cursor: pointer;" width="100" height="100" onclick="SetPoint(this)">_</td>
+        </tr>
+    </table>
+
+</body>
+
+</html>
