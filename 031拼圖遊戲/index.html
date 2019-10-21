@@ -5,12 +5,15 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>jQuery Puzzle</title>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
     <style>
         #dvPuzzle {
-            width: 481px;
-            height: 481px;
+            width: 485px;
+            height: 485px;
             border: solid 5px blue;
             padding: 0px;
         }
@@ -38,9 +41,9 @@
             $("#NxN").change(getNxn);
             //變更難度NxN--------------
             function getNxn() {
-                //清除舊格式-----------
+                //清除舊資料-----------
                 $("#dvPuzzle").empty()
-                //取得新格式-----------
+                //取得新資料-----------
                 n = $("#NxN").val();
                 nxn = n * n;
                 getSetup();
@@ -75,7 +78,6 @@
                 $(".PicCell").click(function () {
                     //找尋上下左右有沒有Pic0，有則可以與它交換位置
                     //取得整個拼圖完整資料
-                    console.log("123")
                     var cells = $("#dvPuzzle div");
                     //取得被點選的位置編號
                     var i = cells.index(this);
@@ -102,7 +104,9 @@
                                 ahead.after(behind);
                                 behindPrev.after(ahead);
                             }
-                            endGame();
+                            if (noEnd) {
+                                endGame();
+                            }
                             break;
                         }
                     }
@@ -142,7 +146,11 @@
             //------------------------------------------------------
             //開始遊戲按鈕---------------------------------------------------
             $("#Start").click(function () {
-                for (var i = 0; i < 2; i++) {
+                //設置用來跳過通關檢測的變數(避免開始中途直接過關)
+                noEnd = false;
+                //input輸入打亂步數
+                var stepCount = $("#StepCount").val()
+                for (var i = 0; i < stepCount; i++) {
                     var cells = $("#dvPuzzle div");
                     //找出空格所在位置，並取得其相鄰圖塊
                     var toMove = getNearPos(cells.index($("#Pic0")[0]));
@@ -150,6 +158,7 @@
                         parseInt(Math.random() * toMove.length)
                     ]).click();
                 }
+                noEnd = true;
             });
             //--------------------------------------------------------------
         });
@@ -157,22 +166,30 @@
 </head>
 
 <body>
-    <div class="body">
-        <div class="gamebuttons">
-            <input type="button" id="Start" value="開始" />
-            <select name="NxN" id="NxN">
-                <option value="3">3x3</option>
-                <option value="4" selected>4x4</option>
-                <option value="5">5x5</option>
-                <option value="6">6x6</option>
-                <option value="7">7x7</option>
-                <option value="8">8x8</option>
-                <option value="9">9x9</option>
-                <option value="10">10x10</option>
-            </select>
+    <div class="row" style="margin: 10px">
+        <div class="col-md-6">
+            <div class="gameimg">
+                <div id="dvPuzzle"></div>
+            </div>
         </div>
-        <div class="gameimg">
-            <div id="dvPuzzle"></div>
+        <div class="col-md-6">
+            <div class="card">
+                <legend class="btn btn-primary">遊戲設定 - 必填</legend>
+                <div class="gamebuttons" style="margin:0px auto">
+                    ₍₍ ◝('ω'◝) ⁾⁾ ₍₍ ◝('ω'◝) ⁾⁾ <input type="button" id="Start" value="開始" class="btn btn-primary"/> ₍₍ (◟'ω')◟ ⁾⁾ ₍₍ (◟'ω')◟ ⁾⁾<br>
+                    <input type="text" id="StepCount" value="10">輸入開始後亂數要跑幾步<br>
+                    <select name="NxN" id="NxN">
+                        <option value="3">3x3</option>
+                        <option value="4" selected>4x4</option>
+                        <option value="5">5x5</option>
+                        <option value="6">6x6</option>
+                        <option value="7">7x7</option>
+                        <option value="8">8x8</option>
+                        <option value="9">9x9</option>
+                        <option value="10">10x10</option>
+                    </select>難度ლ(◉◞౪◟◉ )ლლ(◉◞౪◟◉ )ლლ(◉◞౪◟◉ )ლ<br>
+                </div>
+            </div>
         </div>
     </div>
 
