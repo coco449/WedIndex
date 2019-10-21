@@ -25,7 +25,11 @@
             border-bottom: solid 1px gray;
             float: left;
             overflow: hidden;
+        }
 
+        .imgcss {
+            width: 485px;
+            height: 485px;
         }
     </style>
     <script type="text/javascript">
@@ -35,12 +39,13 @@
             //難度NxN(預設)------------
             var n = $("#NxN").val();
             var nxn = n * n;
+            var noEnd = true;
             getSetup();
             //------------------------
             //選單換難度NxN------------
-            $("#NxN").change(getNxn);
-            //變更難度NxN--------------
-            function getNxn() {
+            $("#NxN").change(Update);
+            //更新資料--------------
+            function Update() {
                 //清除舊資料-----------
                 $("#dvPuzzle").empty()
                 //取得新資料-----------
@@ -51,12 +56,12 @@
             }
             //------------------------
 
-
+            //+$("#imgurl").val+
             //取得遊戲起始設定-------------------------------------------------------------------------------------------------
             function getSetup() {
                 //畫面設定--填入NxN張圖----------------------------------------------------------------------------------------
                 for (var i = 0; i < nxn; i++) {
-                    $("#dvPuzzle").append("<div class='PicCell' id='Pic" + i + "'><img src='陽春麵.png' /></div>");
+                    $("#dvPuzzle").append("<div class='PicCell' id='Pic" + i + "'><img class='imgcss' src='" + $("#imgurl").val() + "'/></div>");
                     var row = parseInt(i / n);
                     var col = i % n;
                     $("#Pic" + i + " img").css("margin-left", col * (-480 / n) + 1).css("margin-top", row * (-480 / n) + 1);
@@ -161,6 +166,17 @@
                 noEnd = true;
             });
             //--------------------------------------------------------------
+            //圖片表單---------------------------------
+            $("#gallery").change(newimg)
+            function newimg() {
+                var newimg = $("#gallery").val()
+                $("#imgurl").val(newimg)
+                Update();
+            }
+            //-----------------------------------------
+            //更換圖片--------------------
+            $("#imgurl").change(Update)
+            //---------------------------
         });
     </script>
 </head>
@@ -175,9 +191,12 @@
         <div class="col-md-6">
             <div class="card">
                 <legend class="btn btn-primary">遊戲設定 - 必填</legend>
-                <div class="gamebuttons" style="margin:0px auto">
-                    ₍₍ ◝('ω'◝) ⁾⁾ ₍₍ ◝('ω'◝) ⁾⁾ <input type="button" id="Start" value="開始" class="btn btn-primary"/> ₍₍ (◟'ω')◟ ⁾⁾ ₍₍ (◟'ω')◟ ⁾⁾<br>
-                    <input type="text" id="StepCount" value="10">輸入開始後亂數要跑幾步<br>
+                <div class="gamebuttons" style="margin:10px auto">
+                    ₍₍ ◝('ω'◝) ⁾⁾ ₍₍ ◝('ω'◝) ⁾⁾ <input type="button" id="Start" value="開始" class="btn btn-primary" /> ₍₍
+                    (◟'ω')◟ ⁾⁾ ₍₍ (◟'ω')◟ ⁾⁾<br>
+                    ----------------------------------------------------------------------<br>
+                    <input type="text" id="StepCount"
+                        value="10">輸入開始後亂數要跑幾步<br>----------------------------------------------------------------------<br>
                     <select name="NxN" id="NxN">
                         <option value="3">3x3</option>
                         <option value="4" selected>4x4</option>
@@ -187,7 +206,17 @@
                         <option value="8">8x8</option>
                         <option value="9">9x9</option>
                         <option value="10">10x10</option>
-                    </select>難度ლ(◉◞౪◟◉ )ლლ(◉◞౪◟◉ )ლლ(◉◞౪◟◉ )ლ<br>
+                    </select>難度ლ(◉◞౪◟◉ )ლლ(◉◞౪◟◉ )ლლ(◉◞౪◟◉
+                    )ლ<br>----------------------------------------------------------------------<br>
+                    <input type="text" id="imgurl" value="./img/overlord.jpg">
+                    <select name="gallery" id="gallery">
+                        <option value="./img/overlord.jpg" selected>安茲●烏爾恭</option>
+                        <option value="./img/overlord13.5.jpg">overlord</option>
+                        <option value="./img/拉麵.png">拉麵</option>
+                        <option value="./img/黃衣之王.jpg">黃衣之王</option>
+                        <option value="./img/精靈遊俠.jpg">精靈遊俠</option>
+                    </select>
+                    <br>直接輸入圖片網址即可換成自己想到的圖片
                 </div>
             </div>
         </div>
