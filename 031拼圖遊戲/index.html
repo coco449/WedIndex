@@ -58,8 +58,6 @@
                 //--------------------
             }
             //------------------------
-
-            //+$("#imgurl").val+
             //取得遊戲起始設定-------------------------------------------------------------------------------------------------
             function getSetup() {
                 //畫面設定--填入NxN張圖----------------------------------------------------------------------------------------
@@ -200,22 +198,85 @@
             //更換圖片--------------------
             $("#imgurl").change(Update)
             //---------------------------
-            //一鍵解題------------------------------------
+            //一鍵解題-----------------------------------------------------------
             $("#answer").click(function () {
-                //設置用來跳過通關檢測的變數
+                answerArr = new Array;
+                optimization();
+                //設置用來跳過通關檢測的變數(不然有機會重複過關數次)
                 noEnd = false;
-                console.log(record.length);
-                for (var i = 0; i < record.length; i++) {
-                    var cells = $("#dvPuzzle div");
-                    //找出空格所在位置，並取得其相鄰圖塊
-                    var toMove = getNearPos(cells.index($("#Pic0")[0]));
-                    
-                    cells.eq(toMove[ //由空格的相鄰圖塊擇一挪動
-                        parseInt(Math.random() * toMove.length)
-                    ]).click();
-                }
-                noEnd = true;
+                remaining = answerArr.length;
+                N = Number(n);
+                speed = Number($("#speed").val());
+                recovery();
             });
+            //優化路線---------------------------
+            function optimization() {
+                var j = 0;
+                for (var i = 0; i < record.length; i++) {
+                    if (j==0) {
+                        answerArr[0] = record[i];
+                        console.log(answerArr);
+                        j++;
+                    }
+                    else {
+                        if (answerArr[j - 1] === "W" && record[i] === "S") {
+                            answerArr.splice(j - 1, 1);
+                            console.log(answerArr);
+                            j--;
+                        }
+                        else if (answerArr[j - 1] === "S" && record[i] === "W") {
+                            answerArr.splice(j - 1, 1);
+                            console.log(answerArr);
+                            j--;
+                        }
+                        else if (answerArr[j - 1] === "A" && record[i] === "D") {
+                            answerArr.splice(j - 1, 1);
+                            console.log(answerArr);
+                            j--;
+                        }
+                        else if (answerArr[j - 1] === "D" && record[i] === "A") {
+                            answerArr.splice(j - 1, 1);
+                            console.log(answerArr);
+                            j--;
+                        }
+                        else {
+                            answerArr[j] = record[i];
+                            console.log(answerArr);
+                            j++;
+                        }
+                    }
+                }
+
+            }
+            //-----------------------------------
+            function recovery() {
+                cells = $("#dvPuzzle div");
+                //空格所在位置 : cells.index($("#Pic0")[0])
+                //上一步的移動方向 : answerArr[remaining-1]
+                switch (answerArr[remaining - 1]) {
+                    case "W":
+                        cells.eq(cells.index($("#Pic0")[0]) + N).click();
+                        break;
+                    case "A":
+                        cells.eq(cells.index($("#Pic0")[0]) + 1).click();
+                        break;
+                    case "S":
+                        cells.eq(cells.index($("#Pic0")[0]) - N).click();
+                        break;
+                    case "D":
+                        cells.eq(cells.index($("#Pic0")[0]) - 1).click();
+                        break;
+                }
+                remaining--;
+                if (remaining > 0) {
+                    setTimeout(recovery, speed);
+                }
+                else {
+                    record.length = 0;
+                    noEnd = true;
+                }
+            }
+            //-------------------------------------------------------------------
         });
     </script>
 </head>
@@ -234,7 +295,7 @@
                     ₍₍ ◝('ω'◝) ⁾⁾ ₍₍ ◝('ω'◝) ⁾⁾ <input type="button" id="Start" value="開始" class="btn btn-primary" /> ₍₍
                     (◟'ω')◟ ⁾⁾ ₍₍ (◟'ω')◟ ⁾⁾<br>
                     ----------------------------------------------------------------------<br>
-                    <input type="text" id="StepCount"
+                    <input type="text" id="StepCount" maxlength="4"
                         value="10">輸入開始後亂數要跑幾步<br>----------------------------------------------------------------------<br>
                     <select name="NxN" id="NxN">
                         <option value="3">3x3</option>
@@ -257,9 +318,17 @@
                         <option value="./img/自由.jpg">自由</option>
                     </select>
                     <br>直接輸入圖片網址即可換成自己想到的圖片<br>----------------------------------------------------------------------<br>
-                    ₍₍ ◝('ω'◝) ⁾⁾ ₍₍ ◝('ω'◝) ⁾⁾ <input type="button" id="answer" value="一鍵完成" class="btn btn-primary" />
-                    ₍₍
-                    (◟'ω')◟ ⁾⁾ ₍₍ (◟'ω')◟ ⁾⁾
+                    <input type="button" id="answer" value="一鍵完成" class="btn btn-primary" />
+                    <select name="speed" id="speed">
+                        <option value="1000">超慢(1000ms/次))</option>
+                        <option value="800">慢(800ms/次)</option>
+                        <option value="500">普通(500ms/次)</option>
+                        <option value="300">快(300ms/次)</option>
+                        <option value="150">更快(150ms/次)</option>
+                        <option value="100" selected>快還要快(100ms/次)</option>
+                        <option value="10">C8763(10ms/次))</option>
+                    </select>
+                    Bug變正設愈按會愈快
                 </div>
             </div>
         </div>

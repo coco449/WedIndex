@@ -5,12 +5,15 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>jQuery Puzzle</title>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
     <style>
         #dvPuzzle {
-            width: 481px;
-            height: 481px;
+            width: 485px;
+            height: 485px;
             border: solid 5px blue;
             padding: 0px;
         }
@@ -22,7 +25,11 @@
             border-bottom: solid 1px gray;
             float: left;
             overflow: hidden;
+        }
 
+        .imgcss {
+            width: 485px;
+            height: 485px;
         }
     </style>
     <script type="text/javascript">
@@ -32,28 +39,30 @@
             //難度NxN(預設)------------
             var n = $("#NxN").val();
             var nxn = n * n;
+            var noEnd = true;
+            //儲存移動路線 W:上 A:左 S:下 D:右
+            var record = new Array;
             getSetup();
             //------------------------
             //選單換難度NxN------------
-            $("#NxN").change(getNxn);
-            //變更難度NxN--------------
-            function getNxn() {
-                //清除舊格式-----------
+            $("#NxN").change(Update);
+            //更新資料--------------
+            function Update() {
+                //清除舊資料-----------
                 $("#dvPuzzle").empty()
-                //取得新格式-----------
+                //取得新資料-----------
                 n = $("#NxN").val();
                 nxn = n * n;
+                record.length = 0;
                 getSetup();
                 //--------------------
             }
             //------------------------
-
-
             //取得遊戲起始設定-------------------------------------------------------------------------------------------------
             function getSetup() {
                 //畫面設定--填入NxN張圖----------------------------------------------------------------------------------------
                 for (var i = 0; i < nxn; i++) {
-                    $("#dvPuzzle").append("<div class='PicCell' id='Pic" + i + "'><img src='陽春麵.png' /></div>");
+                    $("#dvPuzzle").append("<div class='PicCell' id='Pic" + i + "'><img class='imgcss' src='" + $("#imgurl").val() + "'/></div>");
                     var row = parseInt(i / n);
                     var col = i % n;
                     $("#Pic" + i + " img").css("margin-left", col * (-480 / n) + 1).css("margin-top", row * (-480 / n) + 1);
@@ -75,7 +84,6 @@
                 $(".PicCell").click(function () {
                     //找尋上下左右有沒有Pic0，有則可以與它交換位置
                     //取得整個拼圖完整資料
-                    console.log("123")
                     var cells = $("#dvPuzzle div");
                     //取得被點選的位置編號
                     var i = cells.index(this);
@@ -91,18 +99,34 @@
                             //排序，必要時對調，讓i < j
                             if (i > j) { var k = j; j = i; i = k; }
                             //取得值為0的位置
+                            //record.push()
                             var ahead = cells.eq(i);
                             var behind = cells.eq(j);
                             var behindPrev = behind.prev();
                             //左右對調
-                            if (Math.abs(i - j) == 1)
+                            if (Math.abs(i - j) == 1) {
                                 behind.after(ahead);
+                                if (behind.index(this) == 0) {
+                                    record.push("D")
+                                }
+                                else {
+                                    record.push("A");
+                                }
+                            }
                             else //上下對調
                             {
                                 ahead.after(behind);
                                 behindPrev.after(ahead);
+                                if (behind.index(this) == 0) {
+                                    record.push("S")
+                                }
+                                else {
+                                    record.push("W");
+                                }
                             }
-                            endGame();
+                            if (noEnd) {
+                                endGame();
+                            }
                             break;
                         }
                     }
@@ -135,14 +159,24 @@
                         break;
                     }
                     if (i == nxn - 1) {
-                        alert("過關");
+                        if ($("#imgurl").val() == "./img/精靈遊俠.jpg") {
+                            $("#dvPuzzle").empty();
+                            $("#dvPuzzle").append('<video autoplay="autoplay"><source type="video/mp4" style="width: 485px;" src="你是精靈遊俠.mp4"></source></video>')
+                        }
+                        else {
+                            alert("過關");
+                        }
                     }
                 }
             }
             //------------------------------------------------------
             //開始遊戲按鈕---------------------------------------------------
             $("#Start").click(function () {
-                for (var i = 0; i < 2; i++) {
+                //設置用來跳過通關檢測的變數(避免開始中途直接過關)
+                noEnd = false;
+                //input輸入打亂步數
+                var stepCount = $("#StepCount").val()
+                for (var i = 0; i < stepCount; i++) {
                     var cells = $("#dvPuzzle div");
                     //找出空格所在位置，並取得其相鄰圖塊
                     var toMove = getNearPos(cells.index($("#Pic0")[0]));
@@ -150,29 +184,153 @@
                         parseInt(Math.random() * toMove.length)
                     ]).click();
                 }
+                noEnd = true;
             });
             //--------------------------------------------------------------
+            //圖片表單---------------------------------
+            $("#gallery").change(newimg)
+            function newimg() {
+                var newimg = $("#gallery").val()
+                $("#imgurl").val(newimg)
+                Update();
+            }
+            //-----------------------------------------
+            //更換圖片--------------------
+            $("#imgurl").change(Update)
+            //---------------------------
+            //一鍵解題-----------------------------------------------------------
+            $("#answer").click(function () {
+                answerArr = new Array;
+                optimization();
+                //設置用來跳過通關檢測的變數(不然有機會重複過關數次)
+                noEnd = false;
+                remaining = answerArr.length;
+                N = Number(n);
+                speed = Number($("#speed").val());
+                recovery();
+            });
+            //優化路線---------------------------
+            function optimization() {
+                var j = 0;
+                for (var i = record.length - 1; i >= 0; i--) {
+                    if (j==0) {
+                        answerArr[0] = record[i];
+                        console.log(answerArr);
+                        j++;
+                    }
+                    else {
+                        if (answerArr[j - 1] === "W" && record[i] === "S") {
+                            answerArr.splice(j - 1, 1);
+                            console.log(answerArr);
+                            j--;
+                        }
+                        else if (answerArr[j - 1] === "S" && record[i] === "W") {
+                            answerArr.splice(j - 1, 1);
+                            console.log(answerArr);
+                            j--;
+                        }
+                        else if (answerArr[j - 1] === "A" && record[i] === "D") {
+                            answerArr.splice(j - 1, 1);
+                            console.log(answerArr);
+                            j--;
+                        }
+                        else if (answerArr[j - 1] === "D" && record[i] === "A") {
+                            answerArr.splice(j - 1, 1);
+                            console.log(answerArr);
+                            j--;
+                        }
+                        else {
+                            answerArr[j] = record[i];
+                            console.log(answerArr);
+                            j++;
+                        }
+                    }
+                }
+
+            }
+            //-----------------------------------
+            function recovery() {
+                cells = $("#dvPuzzle div");
+                //空格所在位置 : cells.index($("#Pic0")[0])
+                //上一步的移動方向 : answerArr[remaining-1]
+                switch (answerArr[remaining - 1]) {
+                    case "W":
+                        cells.eq(cells.index($("#Pic0")[0]) + N).click();
+                        break;
+                    case "A":
+                        cells.eq(cells.index($("#Pic0")[0]) + 1).click();
+                        break;
+                    case "S":
+                        cells.eq(cells.index($("#Pic0")[0]) - N).click();
+                        break;
+                    case "D":
+                        cells.eq(cells.index($("#Pic0")[0]) - 1).click();
+                        break;
+                }
+                remaining--;
+                if (remaining > 0) {
+                    setTimeout(recovery, speed);
+                }
+                else {
+                    record.length = 0;
+                    noEnd = true;
+                }
+            }
+            //-------------------------------------------------------------------
         });
     </script>
 </head>
 
 <body>
-    <div class="body">
-        <div class="gamebuttons">
-            <input type="button" id="Start" value="開始" />
-            <select name="NxN" id="NxN">
-                <option value="3">3x3</option>
-                <option value="4" selected>4x4</option>
-                <option value="5">5x5</option>
-                <option value="6">6x6</option>
-                <option value="7">7x7</option>
-                <option value="8">8x8</option>
-                <option value="9">9x9</option>
-                <option value="10">10x10</option>
-            </select>
+    <div class="row" style="margin: 10px">
+        <div class="col-md-6">
+            <div class="gameimg">
+                <div id="dvPuzzle"></div>
+            </div>
         </div>
-        <div class="gameimg">
-            <div id="dvPuzzle"></div>
+        <div class="col-md-6">
+            <div class="card">
+                <legend class="btn btn-primary">遊戲設定 - 必填</legend>
+                <div class="gamebuttons" style="margin:10px auto">
+                    ₍₍ ◝('ω'◝) ⁾⁾ ₍₍ ◝('ω'◝) ⁾⁾ <input type="button" id="Start" value="開始" class="btn btn-primary" /> ₍₍
+                    (◟'ω')◟ ⁾⁾ ₍₍ (◟'ω')◟ ⁾⁾<br>
+                    ----------------------------------------------------------------------<br>
+                    <input type="text" id="StepCount" maxlength="4"
+                        value="10">輸入開始後亂數要跑幾步<br>----------------------------------------------------------------------<br>
+                    <select name="NxN" id="NxN">
+                        <option value="3">3x3</option>
+                        <option value="4" selected>4x4</option>
+                        <option value="5">5x5</option>
+                        <option value="6">6x6</option>
+                        <option value="7">7x7</option>
+                        <option value="8">8x8</option>
+                        <option value="9">9x9</option>
+                        <option value="10">10x10</option>
+                    </select>難度ლ(◉◞౪◟◉ )ლლ(◉◞౪◟◉ )ლლ(◉◞౪◟◉
+                    )ლ<br>----------------------------------------------------------------------<br>
+                    <input type="text" id="imgurl" value="./img/overlord.jpg">
+                    <select name="gallery" id="gallery">
+                        <option value="./img/overlord.jpg" selected>安茲●烏爾恭</option>
+                        <option value="./img/overlord13.5.jpg">overlord</option>
+                        <option value="./img/拉麵.png">拉麵</option>
+                        <option value="./img/黃衣之王.jpg">黃衣之王</option>
+                        <option value="./img/精靈遊俠.jpg">精靈遊俠</option>
+                        <option value="./img/自由.jpg">自由</option>
+                    </select>
+                    <br>直接輸入圖片網址即可換成自己想到的圖片<br>----------------------------------------------------------------------<br>
+                    <input type="button" id="answer" value="一鍵完成" class="btn btn-primary" />
+                    <select name="speed" id="speed">
+                        <option value="1000">超慢(1000ms/次))</option>
+                        <option value="800">慢(800ms/次)</option>
+                        <option value="500">普通(500ms/次)</option>
+                        <option value="300">快(300ms/次)</option>
+                        <option value="150">更快(150ms/次)</option>
+                        <option value="100" selected>快還要快(100ms/次)</option>
+                        <option value="10">C8763(10ms/次))</option>
+                    </select>
+                    Bug變正設愈按會愈快
+                </div>
+            </div>
         </div>
     </div>
 
