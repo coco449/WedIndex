@@ -40,6 +40,8 @@
             var n = $("#NxN").val();
             var nxn = n * n;
             var noEnd = true;
+            //儲存移動路線 W:上 A:左 S:下 D:右
+            var record = new Array;
             getSetup();
             //------------------------
             //選單換難度NxN------------
@@ -51,6 +53,7 @@
                 //取得新資料-----------
                 n = $("#NxN").val();
                 nxn = n * n;
+                record.length = 0;
                 getSetup();
                 //--------------------
             }
@@ -98,16 +101,30 @@
                             //排序，必要時對調，讓i < j
                             if (i > j) { var k = j; j = i; i = k; }
                             //取得值為0的位置
+                            //record.push()
                             var ahead = cells.eq(i);
                             var behind = cells.eq(j);
                             var behindPrev = behind.prev();
                             //左右對調
-                            if (Math.abs(i - j) == 1)
+                            if (Math.abs(i - j) == 1) {
                                 behind.after(ahead);
+                                if (behind.index(this) == 0) {
+                                    record.push("D")
+                                }
+                                else {
+                                    record.push("A");
+                                }
+                            }
                             else //上下對調
                             {
                                 ahead.after(behind);
                                 behindPrev.after(ahead);
+                                if (behind.index(this) == 0) {
+                                    record.push("S")
+                                }
+                                else {
+                                    record.push("W");
+                                }
                             }
                             if (noEnd) {
                                 endGame();
@@ -144,7 +161,13 @@
                         break;
                     }
                     if (i == nxn - 1) {
-                        alert("過關");
+                        if ($("#imgurl").val() == "./img/精靈遊俠.jpg") {
+                            $("#dvPuzzle").empty();
+                            $("#dvPuzzle").append('<video autoplay="autoplay"><source type="video/mp4" style="width: 485px;" src="你是精靈遊俠.mp4"></source></video>')
+                        }
+                        else {
+                            alert("過關");
+                        }
                     }
                 }
             }
@@ -177,6 +200,22 @@
             //更換圖片--------------------
             $("#imgurl").change(Update)
             //---------------------------
+            //一鍵解題------------------------------------
+            $("#answer").click(function () {
+                //設置用來跳過通關檢測的變數
+                noEnd = false;
+                console.log(record.length);
+                for (var i = 0; i < record.length; i++) {
+                    var cells = $("#dvPuzzle div");
+                    //找出空格所在位置，並取得其相鄰圖塊
+                    var toMove = getNearPos(cells.index($("#Pic0")[0]));
+                    
+                    cells.eq(toMove[ //由空格的相鄰圖塊擇一挪動
+                        parseInt(Math.random() * toMove.length)
+                    ]).click();
+                }
+                noEnd = true;
+            });
         });
     </script>
 </head>
@@ -215,8 +254,12 @@
                         <option value="./img/拉麵.png">拉麵</option>
                         <option value="./img/黃衣之王.jpg">黃衣之王</option>
                         <option value="./img/精靈遊俠.jpg">精靈遊俠</option>
+                        <option value="./img/自由.jpg">自由</option>
                     </select>
-                    <br>直接輸入圖片網址即可換成自己想到的圖片
+                    <br>直接輸入圖片網址即可換成自己想到的圖片<br>----------------------------------------------------------------------<br>
+                    ₍₍ ◝('ω'◝) ⁾⁾ ₍₍ ◝('ω'◝) ⁾⁾ <input type="button" id="answer" value="一鍵完成" class="btn btn-primary" />
+                    ₍₍
+                    (◟'ω')◟ ⁾⁾ ₍₍ (◟'ω')◟ ⁾⁾
                 </div>
             </div>
         </div>
