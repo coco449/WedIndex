@@ -202,8 +202,6 @@
             $("#answer").click(function () {
                 answerArr = new Array;
                 optimization();
-                //設置用來跳過通關檢測的變數(不然有機會重複過關數次)
-                noEnd = false;
                 remaining = answerArr.length;
                 N = Number(n);
                 speed = Number($("#speed").val());
@@ -273,7 +271,6 @@
                 }
                 else {
                     record.length = 0;
-                    noEnd = true;
                 }
             }
             //-------------------------------------------------------------------
