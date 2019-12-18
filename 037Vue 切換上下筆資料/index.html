@@ -1,0 +1,126 @@
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"
+    integrity="sha256-chlNFSVx3TdcQ2Xlw7SvnbLAavAQLO0Y/LBiWX04viY=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha256-YLGeXaapI0/5IgZopewRJcFXomhRMlYYjugPLSyNjTY=" crossorigin="anonymous" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha256-CjSoeELFOcH0/uxWu6mC/Vlrc1AARqbm/jiiImDGV3s=" crossorigin="anonymous"></script>
+<script>
+    var vm;
+
+    var json =
+    {
+        items: [
+            {
+                ID: 3,
+                title: "總裁", name: "Eric", PictureURL: "https://i.imgur.com/uxvy97n.png", Phone: "0912345678",
+                Address: "新竹市大同區二三五路四號六樓",
+                Memo: "澳洲來的人", isValid: true
+            },
+            {
+                ID: 4,
+                title: "瑪農", name: "David", PictureURL: "https://i.imgur.com/qsQcoGh.png", Phone: "0987654321",
+                Address: "台北市信義區忠孝東路231號3樓",
+                Memo: "充滿活力的廉價勞工", isValid: false
+            },
+            {
+                ID: 5,
+                title: "Boss", name: "Amy", PictureURL: "https://i.imgur.com/dfww1JX.png", Phone: "0912121121",
+                Address: "高雄市仁義區六六路3號23樓",
+                Memo: "小資女", isValid: true
+            }
+        ]
+    };
+
+    function Binding() {
+        vm = new Vue(
+            {
+                el: '#block1',
+                data: { iii: json.items[2] },
+                methods: {
+                    Chang: function (e) {
+                        this.$data.iii.isValid = !this.$data.iii.isValid;
+                    }
+                }
+            }
+        );
+    }
+
+    //取得當前資料的ID編號
+    function GetCurrentIndex() {
+        return vm.$data.iii.ID;
+    }
+
+    $(document).ready(function () {
+        //資料繫結
+        Binding();
+
+        $('#ButtonPrev').click(function (e) {
+            //取得當前資料的ID編號
+            var CurrentIndex = GetCurrentIndex();
+            //嘗試找上一筆
+            var rets = $.grep(json.items, function (iii, index) {
+                return iii.ID < CurrentIndex;
+            });
+            //如果有找到資料，則設定
+            if (rets.length > 0) {
+                vm.$data.iii = rets[rets.length - 1];
+            }
+        });
+        $('#ButtonNext').click(function (e) {
+            //取得當前資料的ID編號
+            var CurrentIndex = GetCurrentIndex();
+            //嘗試找下一筆
+            var rets = $.grep(json.items, function (iii, index) {
+                return iii.ID > CurrentIndex;
+            });
+            //如果有找到資料，則設定
+            if (rets.length > 0) {
+                vm.$data.iii = rets[0];
+            }
+        });
+    });
+</script>
+
+<body>
+    <div id="block1" class="row" style="margin: 10px">
+        <div class="col-6" style="background-color:lightgray; margin: 30px">
+            <div class="row">
+                <div class="col-6">
+                    <br />
+                    <div class="row">
+                        <div class="col-6">
+                        <h5>資料編號: {{iii.ID}}</h5>
+                        </div>
+                        <h5 v-if="!iii.isValid">已刪除</h5>
+                    </div>
+                    <label>職稱:</label>
+                    <input class="form-control" type="text" v-model="iii.title" />
+                    <label>姓名:</label>
+                    <input class="form-control" type="text" v-model="iii.name" />
+                    <label>Phone:</label>
+                    <input class="form-control" type="text" v-model="iii.Phone" />
+                </div>
+                <div class="col-6">
+                    <img class="img-responsive pull-right" style="width: 200px; margin-top: 30px"
+                        v-bind:src="iii.PictureURL" />
+                </div>
+            </div>
+            <label>Address:</label>
+            <input class="form-control" type="text" v-model="iii.Address" />
+            <label>Memo:</label>
+            <textarea class="form-control" v-model="iii.Memo"></textarea>
+            <br />
+            <button class="btn btn-success" id="ButtonPrev">上一筆</button>
+            <button class="btn btn-success" v-if="iii.isValid" v-on:click="Chang">刪除</button>
+            <button class="btn btn-success" v-else v-on:click="Chang">找回</button>
+            <button class="btn btn-success  pull-right" id="ButtonNext">下一筆</button>
+            <br /> <br />
+        </div>
+    </div>
+</body>
+
+</html>

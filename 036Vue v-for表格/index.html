@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"
+        integrity="sha256-chlNFSVx3TdcQ2Xlw7SvnbLAavAQLO0Y/LBiWX04viY=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha256-YLGeXaapI0/5IgZopewRJcFXomhRMlYYjugPLSyNjTY=" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha256-CjSoeELFOcH0/uxWu6mC/Vlrc1AARqbm/jiiImDGV3s=" crossorigin="anonymous"></script>
+    <!-- https://datatables.net/ -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" />
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <table id="myTable">
+                    <thead>
+                        <tr>
+                            <th>資料編號</th>
+                            <th>職稱</th>
+                            <th>姓名</th>
+                            <th>Phone</th>
+                            <th>Address</th>
+                            <th>Memo</th>
+                            <th>isValid</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="item in items">
+                            <td>{{item.ID}}</td>
+                            <td>{{item.title}}</td>
+                            <td>{{item.name}}</td>
+                            <td>{{item.Phone}}</td>
+                            <td>{{item.Address}}</td>
+                            <td>{{item.Memo}}</td>
+                            <td>{{item.isValid}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    var json =
+    {
+        items: [
+            {
+                ID: 3,
+                title: "總裁", name: "Eric", PictureURL: "https://i.imgur.com/uxvy97n.png", Phone: "0912345678",
+                Address: "新竹市大同區二三五路四號六樓",
+                Memo: "澳洲來的人", isValid: true
+            },
+            {
+                ID: 4,
+                title: "瑪農", name: "David", PictureURL: "https://i.imgur.com/qsQcoGh.png", Phone: "0987654321",
+                Address: "台北市信義區忠孝東路231號3樓",
+                Memo: "充滿活力的廉價勞工", isValid: true
+            },
+            {
+                ID: 5,
+                title: "Boss", name: "Amy", PictureURL: "https://i.imgur.com/dfww1JX.png", Phone: "0912121121",
+                Address: "高雄市仁義區六六路3號23樓",
+                Memo: "小資女", isValid: true
+            },
+            {
+                ID: 6,
+                title: "總裁", name: "Eric", PictureURL: "https://i.imgur.com/uxvy97n.png", Phone: "0912345678",
+                Address: "新竹市大同區二三五路四號六樓",
+                Memo: "澳洲來的人", isValid: true
+            },
+            {
+                ID: 7,
+                title: "瑪農", name: "David", PictureURL: "https://i.imgur.com/qsQcoGh.png", Phone: "0987654321",
+                Address: "台北市信義區忠孝東路231號3樓",
+                Memo: "充滿活力的廉價勞工", isValid: true
+            },
+            {
+                ID: 8,
+                title: "Boss", name: "Amy", PictureURL: "https://i.imgur.com/dfww1JX.png", Phone: "0912121121",
+                Address: "高雄市仁義區六六路3號23樓",
+                Memo: "小資女", isValid: true
+            }
+        ]
+    };
+    function Binding() {
+        new Vue(
+            {
+                el: '#myTable',
+                data: json
+            }
+        );
+    }
+
+    $(document).ready(function () {
+        Binding();
+        $('#myTable').DataTable();
+    });
+</script>
+
+</html>
